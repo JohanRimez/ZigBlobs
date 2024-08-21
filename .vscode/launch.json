@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cppvsdbg",
+            "request": "launch",
+            "name": "Zig Debug",
+            "program": "${workspaceFolder}/zig-out/bin/ZigBlobs.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/zig-out/bin/",
+            "console": "integratedTerminal",
+            "preLaunchTask": "zig build",
+            "stopAtEntry": false,
+        },
+    ]
+}
