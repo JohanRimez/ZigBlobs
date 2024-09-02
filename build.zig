@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const exe = b.addExecutable(.{
-        .name = "ZigRipples",
+        .name = "ZigBlobs",
         .root_source_file = b.path("src/ZigBlobs.zig"),
         .target = target,
         .optimize = optimize,
