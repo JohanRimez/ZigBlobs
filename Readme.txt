@@ -18,7 +18,7 @@ USAGE:
 
 COMPILING:
 
-The interested coders would immediate find out that the native system wherefor this application is developed, is WindowsOS.
+The interested coders would immediately find out that the native system wherefor this application is developed, is WindowsOS.
 They are invited to adapt the necessary include links (headers & libraries) to their specific installation.
 For WindowOS: running the executable works best with the SDL2.dll library in the same directory as the executable.
 For Linux: package "libsdl2-dev" should already be installed as a prerequisite.
