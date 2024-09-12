@@ -117,26 +117,34 @@ pub fn main() !void {
     try std.posix.getrandom(std.mem.asBytes(&seed));
     prng = std.Random.DefaultPrng.init(seed);
     // initialise SDL
-    if (sdl.SDL_Init(sdl.SDL_INIT_TIMER) != 0) {
+    if (sdl.SDL_Init(sdl.SDL_INIT_TIMER | sdl.SDL_INIT_VIDEO) != 0) {
         std.debug.print("SDL initialisation error: {s}\n", .{sdl.SDL_GetError()});
         return error.sdl_initialisationerror;
     }
     defer sdl.SDL_Quit();
-    const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Game window", 0, 0, 1600, 900, sdl.SDL_WINDOW_FULLSCREEN_DESKTOP) orelse {
+
+    // Prepare full screen (stable alternative for linux)
+    var dm: sdl.SDL_DisplayMode = undefined;
+    if (sdl.SDL_GetDisplayMode(0, 0, &dm) != 0) {
+        std.debug.print("SDL GetDisplayMode error: {s}\n", .{sdl.SDL_GetError()});
+        return error.sdl_initialisationerror;
+    }
+    const window: *sdl.SDL_Window = sdl.SDL_CreateWindow(
+        "Game window",
+        0,
+        0,
+        dm.w,
+        dm.h,
+        sdl.SDL_WINDOW_BORDERLESS | sdl.SDL_WINDOW_MAXIMIZED,
+    ) orelse {
         std.debug.print("SDL window creation failed: {s}\n", .{sdl.SDL_GetError()});
-        return error.sdl_windowcreationfailed;
+        return error.sdl_initialisationerror;
     };
     defer sdl.SDL_DestroyWindow(window);
     const canvas: *sdl.SDL_Surface = sdl.SDL_GetWindowSurface(window) orelse {
         std.debug.print("SDL window surface creation failed: {s}\n", .{sdl.SDL_GetError()});
-        return error.sld_surfacecreationfailed;
+        return error.initialisationerror;
     };
-    const renderer = sdl.SDL_CreateSoftwareRenderer(canvas) orelse {
-        std.debug.print("SDL software renderer creation failed: {s}\n", .{sdl.SDL_GetError()});
-        return error.sld_renderercreationfailed;
-    };
-    defer sdl.SDL_DestroyRenderer(renderer);
-    _ = sdl.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     var cpubar = sdl.SDL_Rect{ .x = 0, .y = canvas.h - 10, .w = 500, .h = 10 };
     width = @intCast(canvas.w);
     height = @intCast(canvas.h);
@@ -178,7 +186,8 @@ pub fn main() !void {
         const tStop = timer.read() / 1_000_000;
         const lap: u32 = @intCast(tStop);
         cpubar.w = @intCast(@min(width, tStop * width / refreshrate));
-        _ = sdl.SDL_RenderFillRect(renderer, &cpubar);
+
+        _ = sdl.SDL_FillRect(canvas, &cpubar, 0xffffffff);
         if (lap < refreshrate) sdl.SDL_Delay(refreshrate - lap);
     }
     std.debug.print("All done.\n", .{});
