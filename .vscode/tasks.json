@@ -7,9 +7,7 @@
             "label": "zig build",
             "type": "shell",
             "command": "zig",
-            "args": [
-                "build",
-            ],
+            "args": [ "build",],
             "options": {
                 "cwd": "${workspaceRoot}"
             },

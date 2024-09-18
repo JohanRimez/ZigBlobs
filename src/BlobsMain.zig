@@ -1,5 +1,5 @@
 const std = @import("std");
-const sdl = @import("SDLimport.zig");
+const sdl = @import("cImport.zig");
 const Thread = std.Thread;
 
 const VecSize = 8;
@@ -164,6 +164,12 @@ pub fn main() !void {
     };
     try pool.init(.{ .allocator = allocator });
     defer pool.deinit();
+
+    // Tweak background openGL to avoid screen flickering
+    if (sdl.SDL_GL_GetCurrentContext() != null) {
+        _ = sdl.SDL_GL_SetSwapInterval(1);
+        std.debug.print("Adapted current openGL context for vSync\n", .{});
+    }
 
     // Hide mouse
     _ = sdl.SDL_ShowCursor(sdl.SDL_DISABLE);

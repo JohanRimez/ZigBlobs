@@ -2,4 +2,4 @@ zig-out/
 .zig-cache/
 *.a
 *.so
-src/SDLimport.zig
+src/cImport.zig

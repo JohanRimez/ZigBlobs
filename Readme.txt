@@ -22,12 +22,12 @@ USAGE:
 CODING:
 
 In order for VS Code/Codium to run smoothly with the Zig Language Server (ZLS) in both Windows and Linux, the C-library and the SDL-library header files
-are first exported to a common import file "SDLimport.zig" (important: UTF-8) as a preparatory step (you may want to locate the header files first and 
+are first exported to a common import file "cImport.zig" (important: UTF-8) as a preparatory step (you may want to locate the header files first and 
 adapt the below commands first). I consider this file to be put in the source directory.
 
 target specific:
-(Windows) zig translate-c C:\Users\Public\Includes\SDL2\include\sdl.h -lc > SDLimport.zig
-(Linux)   zig translate-c /usr/include/SDL2/SDL.h -lc -target x86_64-linux-gnu -I/usr/include -I/usr/include/x86_64-linux-gnu > SDLimport.zig
+(Windows) zig translate-c C:\Users\Public\Includes\SDL2\include\sdl.h -lc > cImport.zig
+(Linux)   zig translate-c /usr/include/SDL2/SDL.h -lc -target x86_64-linux-gnu -I/usr/include -I/usr/include/x86_64-linux-gnu > cImport.zig
 
 COMPILING:
 
